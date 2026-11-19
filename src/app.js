@@ -1,7 +1,7 @@
 import { parse } from './parser.js';
 import { solve } from './integrate.js';
 import { definite, area, fmt } from './definite.js';
-import { tex } from './latex.js';
+import { tex, texPar } from './latex.js';
 import { ev } from './eval.js';
 import { Plot } from './plot.js';
 
@@ -99,7 +99,7 @@ function runArea(f, g, aE, bE, out) {
   const r = area(f, g, aE, bE);
   const c = card('Resultado'); c.classList.add('result');
   if (r.error) { c.append(msg('bad', esc(r.error))); out.append(c); return; }
-  const what = g ? `\\int_{${tex(r.aE)}}^{${tex(r.bE)}} \\left(${tex(f)} - ${tex(g)}\\right)dx` : `\\int_{${tex(r.aE)}}^{${tex(r.bE)}} ${tex(f)}\\,dx`;
+  const what = g ? `\\int_{${tex(r.aE)}}^{${tex(r.bE)}} \\left[${texPar(f)} - ${texPar(g)}\\right]dx` : `\\int_{${tex(r.aE)}}^{${tex(r.bE)}} ${tex(f)}\\,dx`;
   if (r.swapped) c.append(msg('info', 'Los límites estaban invertidos; se intercambiaron para calcular el área en [a, b].'));
   const l1 = h('div', 'big'), l2 = h('div', 'big');
   math(l1, `\\text{Área con signo: } ${what} = ${r.exactSigned ? tex(r.exactSigned) + ' \\approx ' : ''}${fmt(r.signed)}`, true);

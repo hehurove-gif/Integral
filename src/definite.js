@@ -1,5 +1,5 @@
 // Integrales definidas y áreas (con signo / geométricas)
-import { num, add, mul, neg, sub, simp, substVar, PI } from './ast.js';
+import { num, add, mul, neg, sub, simp, expand, substVar, PI } from './ast.js';
 import { ev, simpson } from './eval.js';
 import { solve } from './integrate.js';
 import { tex } from './latex.js';
@@ -83,7 +83,7 @@ export function area(f, g, aE0, bE0) {
   let swapped = false;
   if (a > b) { [a, b, aE, bE] = [b, a, bE, aE]; swapped = true; }
   if (a === b) return { error: 'Los límites son iguales: el área es 0.' };
-  const hAst = g ? simp(sub(f, g)) : f, h = fx(hAst);
+  const hAst = g ? expand(sub(f, g)) : f, h = fx(hAst);
   const sing = findSingularity(h, a, b);
   if (sing !== null) return { error: `La función no está definida o diverge cerca de x = ${fmt(sing)} dentro del intervalo (integral impropia, aún no implementada).` };
   const roots = findRoots(h, a, b);
