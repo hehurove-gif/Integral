@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Calculadora de integrales paso a paso (indefinidas, definidas, áreas)",
   "type": "module",
-  "scripts": { "test": "node --test "test/*.test.mjs"", "start": "python3 -m http.server 8080" },
+  "scripts": {
+    "test": "node --test test/integrate.test.mjs test/definite.test.mjs",
+    "start": "python3 -m http.server 8080"
+  },
   "license": "MIT"
 }
