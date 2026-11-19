@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de integrales paso a paso</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <header>
+    <h1>∫ Calculadora de integrales</h1>
+    <p>Resuelve integrales indefinidas y definidas, muestra cada paso con su justificación, grafica la región y calcula áreas.</p>
+  </header>
+  <main>
+    <section class="card" id="form">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-mode="indef">Indefinida</button>
+        <button class="tab" data-mode="def">Definida</button>
+        <button class="tab" data-mode="area">Área entre curvas</button>
+      </div>
+      <label>f(x) <input id="f" autocomplete="off" spellcheck="false" value="x*e^x" placeholder="ej. x^2*sin(x)"></label>
+      <div class="preview" id="fprev"></div>
+      <label id="gRow" hidden>g(x) <small>(opcional: si lo dejas vacío, el área es contra el eje x)</small>
+        <input id="g" autocomplete="off" spellcheck="false" placeholder="ej. x^2"></label>
+      <div class="limits" id="limits" hidden>
+        <label>Límite inferior a <input id="a" autocomplete="off" value="0"></label>
+        <label>Límite superior b <input id="b" autocomplete="off" value="1"></label>
+      </div>
+      <div class="chips" id="chips"></div>
+      <button id="go" class="primary">Calcular</button>
+      <details class="help"><summary>Cómo escribir expresiones</summary>
+        <p>Usa <code>x</code>, <code>^</code> para potencias, <code>*</code> o yuxtaposición (<code>2x</code>), <code>/</code> para dividir, <code>pi</code>, <code>e</code>.
+        Funciones con paréntesis: <code>sin cos tan cot sec csc asin acos atan sinh cosh tanh ln exp sqrt</code>.
+        Ejemplos: <code>x^2*sin(x)</code>, <code>1/(1+x^2)</code>, <code>sqrt(2x+1)</code>, <code>e^(-x)</code>. Los límites pueden ser <code>pi/2</code>, <code>e</code>, <code>sqrt(2)</code>…</p>
+      </details>
+    </section>
+    <div id="out"></div>
+  </main>
+  <footer>Motor simbólico propio (sin IA): cada transformación sale de una regla matemática y el resultado se comprueba derivando. · <a href="https://github.com/hehurove-gif/Integral">Código</a></footer>
+</body>
+</html>
