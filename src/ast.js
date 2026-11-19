@@ -100,6 +100,7 @@ function polyDeg(t) {
   if (r.t === 'pow' && r.b.t === 'sym' && isVar(r.b.n) && r.e.t === 'num') return val(r.e);
   return null;
 }
+const sz = (t) => (t.t === 'mul' && t.a[0].t === 'num' ? size(t) - 1 : size(t));
 function simpAdd(ts) {
   const flat = [];
   (function f(a) { for (const t of a) { if (t.t === 'add') f(t.a); else flat.push(t); } })(ts);
@@ -122,7 +123,7 @@ function simpAdd(ts) {
   if (out.length === 1) return out[0];
   out.sort((x, y) => {
     const dx = polyDeg(x), dy = polyDeg(y);
-    if (dx === null && dy === null) return K(x) < K(y) ? -1 : 1;
+    if (dx === null && dy === null) return sz(y) - sz(x) || (K(x) < K(y) ? -1 : 1);
     if (dx === null) return -1;
     if (dy === null) return 1;
     return dy - dx;

@@ -1,8 +1,8 @@
 // AST -> LaTeX
-import { num, mul, pow, simp, isVar, rmul } from './ast.js';
+import { num, mul, pow, simp, rmul } from './ast.js';
 
 const par = (s) => `\\left(${s}\\right)`;
-const NAME = { asin: '\\arcsin', acos: '\\arccos', atan: '\\arctan', sin: '\\sin', cos: '\\cos', tan: '\\tan', cot: '\\cot', sec: '\\sec', csc: '\\csc', sinh: '\\sinh', cosh: '\\cosh', tanh: '\\tanh', ln: '\\ln' };
+const NAME = { asin: '\\arcsin', acos: '\\arccos', atan: '\\arctan', sin: '\\operatorname{sen}', cos: '\\cos', tan: '\\tan', cot: '\\cot', sec: '\\sec', csc: '\\csc', sinh: '\\operatorname{senh}', cosh: '\\cosh', tanh: '\\tanh', ln: '\\ln' };
 const simple = (a) => a.t === 'sym' || (a.t === 'num' && a.q === 1 && a.p >= 0);
 
 function numTex(e) { return e.q === 1 ? `${e.p}` : `${e.p < 0 ? '-' : ''}\\frac{${Math.abs(e.p)}}{${e.q}}`; }
@@ -17,9 +17,10 @@ function fac(f) { // factor dentro de un producto
   if (f.t === 'add') return par(tex(f));
   return tex(f);
 }
-function join(list) {
-  return list.reduce((acc, s, i) => (i === 0 ? s : acc + (/^[0-9]|^\\frac/.test(s) ? '\\cdot ' : '') + s), '');
+function join(list) { // list: [{s, fnLike}]
+  return list.reduce((acc, it, i) => (i === 0 ? it.s : acc + (/^[0-9]|^\\frac/.test(it.s) ? '\\cdot ' : list[i - 1].fnLike ? '\\,' : '') + it.s), '');
 }
+const isFnLike = (f) => f.t === 'fn' || (f.t === 'pow' && f.b.t === 'fn');
 function fnTex(e) {
   if (e.n === 'lnabs') return `\\ln\\left|${tex(e.a)}\\right|`;
   const n = NAME[e.n] ?? `\\operatorname{${e.n}}`;
@@ -50,8 +51,9 @@ function mulTex(e) {
   }
   const sign = c.p < 0 ? '-' : '';
   const ap = Math.abs(c.p);
-  const topS = [...(ap !== 1 || !top.length ? [`${ap}`] : []), ...top.map(fac)];
-  const botS = [...(c.q !== 1 ? [`${c.q}`] : []), ...bot.map(fac)];
+  const wrap = (f) => ({ s: fac(f), fnLike: isFnLike(f) });
+  const topS = [...(ap !== 1 || !top.length ? [{ s: `${ap}` }] : []), ...top.map(wrap)];
+  const botS = [...(c.q !== 1 ? [{ s: `${c.q}` }] : []), ...bot.map(wrap)];
   if (!botS.length) return sign + join(topS);
   return `${sign}\\frac{${join(topS) || '1'}}{${join(botS)}}`;
 }
@@ -72,4 +74,3 @@ export function tex(e) {
   }
 }
 export const texPar = (e) => (e.t === 'add' ? par(tex(e)) : tex(e));
-void isVar;
